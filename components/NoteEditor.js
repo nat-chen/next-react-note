@@ -6,7 +6,7 @@ import SaveButton from "@/components/SaveButton";
 import DeleteButton from "@/components/DeleteButton";
 
 import { useFormStatus, useFormState } from "react-dom";
-import { deleteNote, saveNote } from "../app/actions";
+import { deleteNote, saveNote } from "@/actions";
 
 const initialState = {
   message: null,
