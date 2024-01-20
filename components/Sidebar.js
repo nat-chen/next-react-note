@@ -4,6 +4,7 @@ import SidebarSearchField from "@/components/SidebarSearchField";
 import SidebarNoteList from "@/components/SidebarNoteList";
 import EditButton from "@/components/EditButton";
 import NoteListSkeleton from "@/components/NoteListSkeleton";
+import SidebarImport from "@/components/SidebarImport";
 import { useTranslation } from "@/app/i18n/index.js";
 
 export default async function Sidebar({ lng }) {
@@ -33,6 +34,7 @@ export default async function Sidebar({ lng }) {
             <SidebarNoteList />
           </Suspense>
         </nav>
+        <SidebarImport />
       </section>
     </>
   );
