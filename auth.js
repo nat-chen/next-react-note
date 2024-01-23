@@ -1,7 +1,7 @@
 import NextAuth from "next-auth";
 import GitHub from "next-auth/providers/github";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { addUser, getUser } from "@/lib/redis";
+import { addUser, getUser } from "@/lib/prisma";
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   // providers: [GitHub], // 默认登录逻辑
@@ -9,16 +9,16 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     // 默认 UI 交互
     CredentialsProvider({
       // 显示按钮文案 (e.g. "Sign in with...")
-      // name: "密码登录",
+      name: "密码登录",
       // `credentials` 用于渲染登录页面表单
-      // credentials: {
-      //   username: { label: "邮箱", type: "text", placeholder: "输入您的邮箱" },
-      //   password: {
-      //     label: "密码",
-      //     type: "password",
-      //     placeholder: "输入您的密码",
-      //   },
-      // },
+      credentials: {
+        username: { label: "邮箱", type: "text", placeholder: "输入您的邮箱" },
+        password: {
+          label: "密码",
+          type: "password",
+          placeholder: "输入您的密码",
+        },
+      },
       // 处理从用户收到的认证信息
       async authorize(credentials, req) {
         // 默认情况下不对用户输入进行验证，确保使用 Zod 这样的库进行验证
@@ -46,13 +46,23 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   ],
   pages: {
     // 自定义登录逻辑
-    signIn: "/auth/signin",
+    signIn: "/en/auth/signin",
   },
   callbacks: {
     authorized({ request, auth }) {
       const { pathname } = request.nextUrl;
       if (pathname.startsWith("/note/edit")) return !!auth; // 编辑页面要有 session 才能访问
       return true;
+    },
+    async jwt({ token, user, account }) {
+      if (account && account.type === "credentials" && user) {
+        token.userId = user.userId;
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      session.user.userId = token.userId;
+      return session;
     },
   },
 });
