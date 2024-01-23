@@ -2,8 +2,8 @@ import { Inter } from "next/font/google";
 import "./style.css";
 import { locales } from "@/config.js";
 import { Footer } from "@/components/Footer";
-
 import Sidebar from "@/components/Sidebar";
+import Header from "@/components/Header";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -22,6 +22,7 @@ export default function RootLayout({ children, params: { lng } }) {
     <html lang={lng}>
       <body className={inter.className}>
         <div className="container">
+          <Header />
           <div className="main">
             <Sidebar lng={lng} />
             <section className="col note-viewer">{children}</section>
